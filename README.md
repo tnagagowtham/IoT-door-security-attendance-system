@@ -5,7 +5,7 @@ automatically unlocks a servo-motor-controlled door via Arduino, with
 automated WhatsApp alerts to the admin for every entry and new registration.
 
 ## 🎬 Demo Video
-*(Drag your working model video here — it will embed and play inline)*
+https://github.com/user-attachments/assets/2d0a395b-3047-4403-b960-a6eac602214e
 
 ## 🚀 Overview
 This system uses a webcam + face recognition to check who is at the door.
