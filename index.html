@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Security System</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #8e2de2, #4a00e0);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    .start-btn, .submit-btn {
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 30px;
+      background: #ffffff22;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s;
+    }
+    .start-btn:hover, .submit-btn:hover {
+      background: #ffffff55;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.85);
+      padding: 30px 40px;
+      border-radius: 15px;
+      display: none;
+      z-index: 999;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    #unknown_face_form {
+      display: none;
+      margin-top: 20px;
+    }
+    input {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Smart Security System</h1>
+  <button class="start-btn" onclick="startRecognition()">Start Recognition</button>
+  <div id="unknown_face_form">
+    <h2>Unknown Face Detected</h2>
+    <input type="text" id="code_word" placeholder="Enter Code Word">
+    <input type="text" id="name" placeholder="Enter Your Name">
+    <button class="submit-btn" onclick="submitCodeWord()">Submit</button>
+  </div>
+  <div class="popup" id="popup-message">
+    <h2 id="popup-title"></h2>
+    <p id="popup-text"></p>
+  </div>
+  <script>
+    function showPopup(title, message) {
+      document.getElementById('popup-title').innerText = title;
+      document.getElementById('popup-text').innerText = message;
+      const popup = document.getElementById('popup-message');
+      popup.style.display = 'block';
+      setTimeout(() => popup.style.display = 'none', 4000);
+    }
+    function startRecognition() {
+      fetch('/start_recognition')
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'ask_code_word') {
+            document.getElementById('unknown_face_form').style.display = 'block';
+          } else if (data.status === 'success') {
+            showPopup("Door Opening", data.message);
+          }
+        });
+    }
+    function submitCodeWord() {
+      const codeWord = document.getElementById('code_word').value;
+      const name = document.getElementById('name').value;
+      fetch(`/start_recognition?code_word=${codeWord}&name=${name}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            showPopup("Face Saved", `Face saved as ${name}`);
+            if (data.reload) {
+              setTimeout(() => location.reload(), 2000);
+            }
+          }
+          if (data.status === 'failure') {
+            showPopup("Error", "Failed to save face.");
+          }
+        });
+    }
+  </script>
+</body>
+</html>
