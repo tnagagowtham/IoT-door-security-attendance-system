@@ -1,4 +1,4 @@
-# 🔐 IoT-Based Door Security & Attendance System
+# 🔐 IoT-Based Door Security & Attendance Syste
 
 A real-time facial recognition system that verifies registered users and
 automatically unlocks a servo-motor-controlled door via Arduino, with
